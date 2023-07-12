@@ -1,0 +1,23 @@
+{
+  "name": "gameaggregatorbe",
+  "version": "1.0.0",
+  "description": "A back-end for the Game Aggregator Project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index",
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Valentine Sokolovskiy",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.19.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^3.0.1"
+  }
+}
