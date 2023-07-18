@@ -9,8 +9,14 @@ const EpicAPI = require('./stores/epic/epic');
 
 const rankResults = require('./stores/utils/rankResults');
 
+const { createSession } = require('./utils');
 
 const app = fastify({ loqger: true });
+
+app.register(require('@fastify/cookie'), {
+  secret: 'my-secret',
+  hook: 'preValidation',
+});
 
 app.get('/', (req, res) => {
   res.send('Hello world');
@@ -31,10 +37,18 @@ app.post('/api/users', async (req, res) => {
   const salt = await bcrypt.genSaltSync(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const [user, created] = await users.findOrCreate({ where: { username }, defaults: { username, password: hash } });
-  if (!created) return res.code(403);
-  res.code(201).send(user);
+  const [user, created] = await users.findOrCreate(
+    {
+      where: { username },
 
+      defaults: { username, password: hash },
+    },
+  );
+  if (!created) return res.code(403).send();
+  await createSession(res, user.id);
+
+  delete user.dataValues.password;
+  res.code(201).send(user);
 });
 async function start() {
   await app.listen({ port: 5000 });

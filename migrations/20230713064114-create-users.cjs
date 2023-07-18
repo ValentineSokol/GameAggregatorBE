@@ -13,12 +13,12 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true,
       },
-      avatarUrl: {
-        type: Sequelize.STRING
-      },
-      googleId: {
+      password: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      avatarUrl: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
