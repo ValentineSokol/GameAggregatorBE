@@ -52,7 +52,7 @@ app.post('/api/users', async (req, res) => {
 });
 
 app.post('/api/users/login', async (req, res) => {
-  const sendWrongCredentialsRes = () => res.code(400).send(`Невірні дані входу. Будь ласка, перевірте.`);
+  const sendWrongCredentialsRes = () => res.code(400).send('Невірні дані входу. Будь ласка, перевірте.');
   const { username, password } = req.body;
 
   const user = await users.findOne({ where: { username } });
@@ -60,7 +60,7 @@ app.post('/api/users/login', async (req, res) => {
   const passwordsMatch = await bcrypt.compare(password, user.password);
   if (!passwordsMatch) return sendWrongCredentialsRes();
   await createSession(res, user.id);
-  res.code(200).send();
+  return res.code(200).send();
 });
 async function start() {
   await app.listen({ port: 5000 });
