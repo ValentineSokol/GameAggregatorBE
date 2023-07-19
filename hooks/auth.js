@@ -6,7 +6,13 @@ module.exports = async (req) => {
   const sid = readSid(req);
   if (!sid) throw error;
 
-  const session = await sessions.findOne({ where: { sid }, include: [{ model: users }] });
+  const session = await sessions.findOne({
+    where: { sid },
+    include: [{
+      model: users,
+      attributes: { exclude: ['password'] },
+    }],
+  });
   if (!session.user) throw error;
 
   req.sid = sid;

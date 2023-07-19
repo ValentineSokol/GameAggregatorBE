@@ -78,3 +78,8 @@ app.delete('/api/users/logout', {
     res.code(200).send();
   },
 });
+
+app.get('/api/users/currentUser', {
+  preHandler: authHook,
+  handler: (req, res) => res.send({ loggedIn: !!req.user, ...req.user.dataValues }),
+});
