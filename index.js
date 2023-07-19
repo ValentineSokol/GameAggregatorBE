@@ -1,7 +1,7 @@
+require('dotenv').config();
 const fastify = require('fastify');
 const bcrypt = require('bcryptjs');
-
-const { users } = require('./models');
+const { users, sessions } = require('./models');
 
 const SteamAPI = require('./stores/steam/steam');
 const GogAPI = require('./stores/gog/gog');
@@ -10,13 +10,20 @@ const EpicAPI = require('./stores/epic/epic');
 const rankResults = require('./stores/utils/rankResults');
 
 const { createSession } = require('./utils');
+const authHook = require('./hooks/auth');
 
 const app = fastify({ loqger: true });
 
 app.register(require('@fastify/cookie'), {
-  secret: 'my-secret',
+  secret: process.env.COOKIE_SECRET,
   hook: 'preValidation',
 });
+
+async function start() {
+  await app.listen({ port: 5000 });
+}
+
+start();
 
 app.get('/', (req, res) => {
   res.send('Hello world');
@@ -48,7 +55,7 @@ app.post('/api/users', async (req, res) => {
   await createSession(res, user.id);
 
   delete user.dataValues.password;
-  res.code(201).send(user);
+  return res.code(201).send(user);
 });
 
 app.post('/api/users/login', async (req, res) => {
@@ -62,8 +69,12 @@ app.post('/api/users/login', async (req, res) => {
   await createSession(res, user.id);
   return res.code(200).send();
 });
-async function start() {
-  await app.listen({ port: 5000 });
-}
 
-start();
+app.delete('/api/users/logout', {
+  preHandler: authHook,
+  handler: async (req, res) => {
+    await sessions.destroy({ where: { sid: req.sid } });
+    res.clearCookie('sid');
+    res.code(200).send();
+  },
+});
