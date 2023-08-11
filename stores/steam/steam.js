@@ -1,4 +1,5 @@
-const adapter = require('./adapter.js');
+const adapter = require('./adapter');
+const scrapeGame = require('./gamePageScraper');
 
 const baseUrl = 'https://store.steampowered.com/';
 
@@ -9,4 +10,5 @@ const searchGame = async (term) => {
 };
 module.exports = {
   searchGame,
+  scrapeGame,
 };

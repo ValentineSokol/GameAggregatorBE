@@ -14,10 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   games.init({
+    steamId: DataTypes.INTEGER,
+    keyCount: DataTypes.INTEGER,
     name: DataTypes.STRING,
     user_id: DataTypes.INTEGER,
     description: DataTypes.TEXT,
-    cover_url: DataTypes.STRING,
+    coverUrl: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'games',

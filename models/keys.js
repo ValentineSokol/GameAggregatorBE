@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   keys.init({
     game_id: DataTypes.INTEGER,
     key: DataTypes.STRING,
-    user_id: DataTypes.INTEGER,
+    creator_id: DataTypes.INTEGER,
+    owner_id: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'keys',

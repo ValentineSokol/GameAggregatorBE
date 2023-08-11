@@ -9,6 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      steamId: {
+        type: Sequelize.INTEGER,
+        unique: true
+      },
+      keyCount: {
+        type: Sequelize.INTEGER,
+      },
       user_id: {
         type: Sequelize.INTEGER,
         references: {
@@ -24,7 +31,7 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
-      cover_url: {
+      coverUrl: {
         type: Sequelize.STRING
       },
       createdAt: {
