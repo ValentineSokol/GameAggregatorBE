@@ -89,12 +89,14 @@ app.post('/api/games/:id/claim', {
   preHandler: authHook,
   handler: async (req, res) => {
     const { id } = req.params;
-    const game = await games.findByPk(id, { include: [keys], where: { owner_id: null} });
+    const game = await games.findByPk(id, { include: [{ model: keys, where: { owner_id: null } }] });
+    if (!game) return res.code(404).send('Вільних ключів немає');
     const transaction = await sequelize.transaction();
     try {
       const [key] = game.keys;
-      await key.update({owner_id: req.user.id}, {transaction});
-      res.send(key.key);
+      await key.update({ owner_id: req.user.id }, { transaction });
+      await game.decrement('keyCount', { by: 1, transaction });
+      res.send(key.dataValues);
       await transaction.commit();
     } catch (err) {
       console.error(err);
