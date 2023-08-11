@@ -105,6 +105,18 @@ app.post('/api/games/:id/claim', {
   }
 });
 
+app.get('/api/games/my-keys', {
+  preHandler: authHook,
+  handler: async (req, res) => {
+    const myKeys = await keys.findAll({
+      where: { owner_id: req.user.id },
+      include: { model: games },
+    });
+
+    res.send(myKeys);
+  },
+});
+
 app.post('/api/users', async (req, res) => {
   const sendWrongCredentialsRes = () => res
     .code(400)
